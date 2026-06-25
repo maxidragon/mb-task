@@ -1,6 +1,6 @@
 import { Request, Response, Router } from "express";
 import { CandidatesService } from "../services/candidates.service";
-import { createCandidateSchema } from "../schemas/candidate.schema";
+import { createCandidateSchema, listCandidatesSchema } from "../schemas/candidate.schema";
 import { z } from "zod";
 
 export class CandidatesController {
@@ -11,8 +11,14 @@ export class CandidatesController {
         this.router.post('/candidates', this.create.bind(this));
     }
 
-    getAll(req: Request, res: Response) {
-        res.json([]);
+    async getAll(req: Request, res: Response) {
+        const parsed = listCandidatesSchema.safeParse(req.query);
+        if (!parsed.success) {
+            return res.status(400).json({ message: "Validation failed", errors: z.treeifyError(parsed.error)});
+        }
+        const { page, limit } = parsed.data;
+        const result = await this.candidatesService.findAll(page, limit);
+        return res.status(200).json(result);
     }
 
     async create(req: Request, res: Response) {
