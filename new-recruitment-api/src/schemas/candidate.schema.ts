@@ -8,6 +8,7 @@ export const createCandidateSchema = z.object({
     yearsOfExperience: z.number().int().min(0),
     notes: z.string().optional(),
     consentDate: z.iso.datetime(),
+    status: z.enum(['nowy', 'w trakcie rozmów', 'zaakceptowany', 'odrzucony']).default('nowy'),
     jobOfferIds: z.array(z.number().int().positive()).min(1),
 });
 

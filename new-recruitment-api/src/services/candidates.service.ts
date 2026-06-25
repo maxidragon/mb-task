@@ -67,6 +67,7 @@ export class CandidatesService {
       yearsOfExperience,
       notes,
       consentDate,
+      status,
       jobOfferIds,
     } = payload;
 
@@ -93,8 +94,8 @@ export class CandidatesService {
 
     try {
       const result = await this.db.run(
-        `INSERT INTO Candidate (first_name, last_name, email, phone, years_of_experience, notes, consent_date)
-                 VALUES (?, ?, ?, ?, ?, ?, ?)`,
+        `INSERT INTO Candidate (first_name, last_name, email, phone, years_of_experience, notes, status, consent_date)
+                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
         [
           firstName,
           lastName,
@@ -102,6 +103,7 @@ export class CandidatesService {
           phone,
           yearsOfExperience,
           notes ?? null,
+          status,
           consentDate,
         ]
       );
