@@ -11,16 +11,44 @@ export class CandidatesService {
 
   async findAll(page: number, limit: number) {
     const offset = (page - 1) * limit;
+
     const [candidates, total] = await Promise.all([
-      this.db.all(`SELECT * FROM Candidate ORDER BY id LIMIT ? OFFSET ?`, [
-        limit,
-        offset,
-      ]),
+      this.db.all(`SELECT * FROM Candidate ORDER BY id LIMIT ? OFFSET ?`, [limit, offset]),
       this.db.get(`SELECT COUNT(*) as count FROM Candidate`),
     ]);
 
+    const candidateIds = candidates.map((c: any) => c.id);
+
+    let jobOffersByCandidate: Record<number, any[]> = {};
+
+    if (candidateIds.length > 0) {
+      const placeholders = candidateIds.map(() => "?").join(", ");
+      const jobOffers = await this.db.all(
+        `SELECT cjo.candidate_id, jo.id, jo.title, jo.description, jo.salary_range, jo.location
+         FROM CandidateJobOffer cjo
+         JOIN JobOffer jo ON jo.id = cjo.job_offer_id
+         WHERE cjo.candidate_id IN (${placeholders})`,
+        candidateIds
+      );
+
+      jobOffersByCandidate = jobOffers.reduce((acc: Record<number, any[]>, row: any) => {
+        if (!acc[row.candidate_id]) acc[row.candidate_id] = [];
+        acc[row.candidate_id].push({
+          id: row.id,
+          title: row.title,
+          description: row.description,
+          salaryRange: row.salary_range,
+          location: row.location,
+        });
+        return acc;
+      }, {});
+    }
+
     return {
-      data: candidates,
+      data: candidates.map((c: any) => ({
+        ...c,
+        jobOffers: jobOffersByCandidate[c.id] ?? [],
+      })),
       pagination: {
         page,
         limit,
