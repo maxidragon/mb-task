@@ -13,7 +13,7 @@ export class LegacyApiService {
     payload: LegacyCandidatePayload
   ): Promise<void> {
     for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
-      const response = await fetch(LEGACY_API_URL, {
+      const response = await fetch(`${LEGACY_API_URL}/candidates`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
