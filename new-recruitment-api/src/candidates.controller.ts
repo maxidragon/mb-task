@@ -1,9 +1,10 @@
 import { Request, Response, Router } from "express";
+import { Database } from "sqlite";
 
 export class CandidatesController {
     readonly router = Router();
 
-    constructor() {
+    constructor(private readonly db: Database) {
         this.router.get('/candidates', this.getAll.bind(this));
         this.router.post('/candidates', this.create.bind(this));
     }
