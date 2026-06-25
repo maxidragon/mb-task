@@ -8,7 +8,7 @@ To get started with this project, ensure you have the following tools installed 
 
 
 ### 1. **Docker**
-- Docker is required to run the **Legacy API** (JavaScript-based application) in a containerized environment.
+- Docker is required to run the **Legacy API** (JavaScript-based application) in a containerized environment and can also be used to run the new API.
 - The project includes both a `Dockerfile` and `docker-compose.yml` to streamline the setup and execution of the **External API**.
   - **`docker-compose`** will automatically build and launch the service, accessible on **port 4040**.
 
@@ -38,6 +38,14 @@ To get started with this project, ensure you have the following tools installed 
       ```bash
       npm start
       ```
+
+### Running everything with Docker
+- If you want to run both the **Legacy API** and the **New Application** using Docker, you can use the provided `docker-compose.yml` file.
+- Legacy API will be exposed on **port 4040**, and new API will be exposed on **port 3000**.
+
+```
+docker compose up --build
+```
 
 ## Project Structure Overview
 
