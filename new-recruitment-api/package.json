@@ -15,7 +15,8 @@
     "dotenv": "^17.4.2",
     "express": "^5.0.1",
     "sqlite": "^5.1.1",
-    "sqlite3": "^5.1.7"
+    "sqlite3": "^5.1.7",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@types/dotenv": "^6.1.1",
